@@ -101,6 +101,56 @@ fun palindromePermutation(input: String): Boolean {
     return true
 }
 
+
+/**
+ * There are three types of edits that can be done to a string - insert, delete, swap
+ * given two strings, check if they are 1 (or 0) edits away
+ * */
+fun oneAway(a: String, b: String): Boolean {
+    // if the strings are more than off by 1 in length, no single operation will make them equal
+    if (a.length > b.length + 1 || a.length < b.length - 1) return false
+
+    // set flag when a single differing character is read
+    var foundDiff = false
+
+    // strings have equal length, check if swapping a single character will make them equal
+    if (a.length == b.length) {
+        var i = 0
+        while (i < a.length) {
+            if (a[i] != b[i++])
+                if (foundDiff)
+                // second differing char found, return false
+                    return false
+                else
+                // first differing char found, set flag
+                    foundDiff = true
+        }
+
+        return true
+    }
+    // strings have length differing by 1, check if a single insertion will make the shorter string equal the longer string
+    else {
+        val short = if (a.length > b.length) b else a
+        val long = if (a.length > b.length) a else b
+
+        var s = 0
+        var l = 0
+
+        while (s < short.length) {
+            if (short[s++] != long[l++])
+                if (foundDiff)
+                // found multiple differing characters
+                    return false
+                else {
+                    // found a single differing character, don't increment s this round so that we can check if the next character in the long string matches the current character
+                    foundDiff = true
+                    s--
+                }
+        }
+        return true
+    }
+}
+
 val uniqueStr = "abcdefghijk"
 val nonUniqueStr = "abcdefghijka"
 println("$uniqueStr is isUnique? ${isUnique(uniqueStr)}")
@@ -116,3 +166,14 @@ val palindromePerm = "taco cat#@$%@#$%"
 val notPalindromePerm = "taco cat nope"
 println("$palindromePerm is a palindromePermutation? ${palindromePermutation(palindromePerm)}")
 println("$notPalindromePerm is a palindromePermutation? ${palindromePermutation(notPalindromePerm)}")
+
+val oneAwayTestStrings = arrayOf(
+            "" to "", // empty
+            "dog" to "dog", // exact match
+            "adog" to "dog", // insert/delete
+            "dog" to "dogo", // insert/delete
+            "dog" to "doggo",  // too long
+            "doggo11" to "doggo00", // same length, too many different chars
+            "dogg11" to "doggo00", // different length, too many different chars
+            "dog" to "cat")
+oneAwayTestStrings.forEach { println("${it.first} is oneAway from ${it.second}? ${oneAway(it.first, it.second)}") }
