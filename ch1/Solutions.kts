@@ -151,6 +151,30 @@ fun oneAway(a: String, b: String): Boolean {
     }
 }
 
+/**
+ * Compress a string using the counts of repeated characters
+ * aabccccaaa -> a2b1c4a3
+ * return original string if it is shorter than the compressed string
+ * upper and lowercase letters only
+ * */
+fun compress(input: String): String {
+    var res = StringBuilder()
+
+    var i = 0
+    var n: Int
+    while (i < input.length) {
+        n = 1
+        while (i + n < input.length && input[i] == input[i + n])
+            n++
+
+        res.append("${input[i]}$n")
+        i += n
+    }
+    val result = res.toString()
+    return if (result.length > input.length) input else result
+}
+
+
 val uniqueStr = "abcdefghijk"
 val nonUniqueStr = "abcdefghijka"
 println("$uniqueStr is isUnique? ${isUnique(uniqueStr)}")
@@ -177,3 +201,6 @@ val oneAwayTestStrings = arrayOf(
             "dogg11" to "doggo00", // different length, too many different chars
             "dog" to "cat")
 oneAwayTestStrings.forEach { println("${it.first} is oneAway from ${it.second}? ${oneAway(it.first, it.second)}") }
+
+val compressionTestStirngs = arrayOf("", "aaaaa", "abbbbb", "aaaaab", "abcdef")
+compressionTestStirngs.forEach { println("$it compressed is ${compress(it)}") }
