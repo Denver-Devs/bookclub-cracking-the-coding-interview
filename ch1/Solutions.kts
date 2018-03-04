@@ -174,6 +174,47 @@ fun compress(input: String): String {
     return if (result.length > input.length) input else result
 }
 
+/**
+ *  Given an image represented by an NxN matrix, where each pixel in the image is 4 bytes,
+ *  write a method to rotate the image by 90 degrees.
+ *  */
+fun rotate(matrix: MutableList<MutableList<Char>>): MutableList<MutableList<Char>> {
+    val last = matrix.size - 1
+    var first = 0
+    while (first < matrix.size / 2) {
+        var i = first
+
+        while (i < last - first) {
+            val nw = matrix[first][first + i]
+
+            matrix[first][first + i] = matrix[last - first - i][first] //nw
+            matrix[last - first - i][first] = matrix[last - first][last - first - i] // sw
+            matrix[last - first][last - first - i] = matrix[first + i][last - first] // se
+            matrix[first + i][last - first] = nw // ne
+            i++
+        }
+        first++
+    }
+
+    return matrix
+}
+
+/**
+ *  Helpers for printing and setting up the problem
+ *  */
+fun List<List<Char>>.stringify(): String = this.fold(StringBuilder(), { result: StringBuilder, list: List<Char> ->
+    result.appendln(list.joinToString(" "))
+}).toString()
+
+fun buildMatrix(n: Int): MutableList<MutableList<Char>> {
+    val m = MutableList(n, { MutableList(n, { '_' }) })
+    for (i in 0 until (n * n))
+        m[i / n][i % n] = ('a'.toInt() + i).toChar()
+
+    return m
+}
+
+
 
 val uniqueStr = "abcdefghijk"
 val nonUniqueStr = "abcdefghijka"
@@ -204,3 +245,12 @@ oneAwayTestStrings.forEach { println("${it.first} is oneAway from ${it.second}? 
 
 val compressionTestStirngs = arrayOf("", "aaaaa", "abbbbb", "aaaaab", "abcdef")
 compressionTestStirngs.forEach { println("$it compressed is ${compress(it)}") }
+
+for (i in 0..5) {
+  val m = buildMatrix(i)
+  println("------------- ORIGINAL -------------\n" +
+          m.stringify() +
+          "\nROTATED\n-------\n" +
+          rotate(m).stringify())
+
+}
