@@ -178,7 +178,7 @@ fun compress(input: String): String {
  *  Given an image represented by an NxN matrix, where each pixel in the image is 4 bytes,
  *  write a method to rotate the image by 90 degrees.
  *  */
-fun rotate(matrix: MutableList<MutableList<Char>>): MutableList<MutableList<Char>> {
+fun rotate(matrix: MutableList<MutableList<Int>>): MutableList<MutableList<Int>> {
     val last = matrix.size - 1
     var first = 0
     while (first < matrix.size / 2) {
@@ -200,38 +200,87 @@ fun rotate(matrix: MutableList<MutableList<Char>>): MutableList<MutableList<Char
 }
 
 /**
- *  Helpers for printing and setting up the problem
- *  */
-fun List<List<Char>>.stringify(): String = this.fold(StringBuilder(), { result: StringBuilder, list: List<Char> ->
-    result.appendln(list.joinToString(" "))
+ *  Write an algorithm such that if an element in an MxN matrix is 0, its entire row and column are set to 0
+ **/
+fun zero(matrix: MutableList<MutableList<Int>>): MutableList<MutableList<Int>> {
+    if (matrix.size == 0 || matrix[0].size == 0) return mutableListOf()
+
+    // arrays to track the indexes of rows and columns in the matrix to be zeroed out
+    val zeroRows = Array(matrix.size, { false })
+    val zeroCols = Array(matrix[0].size, { false })
+
+    // loop through all rows checking for a zero
+    for (r in 0..matrix.size - 1) {
+        for (i in matrix[r])
+            if (i == 0) {
+                zeroRows[r] = true
+                // once a single zero has been found in the row, there's no need to continue searching for more
+                // TODO: how does this impact the time cost?
+                break
+            }
+    }
+
+    // loop through all columns checking for a zero
+    for (c in 0..matrix[0].size - 1) {
+        for (r in 0..matrix.size - 1) {
+            if (matrix[r][c] == 0) {
+                zeroCols[c] = true
+                break
+            }
+        }
+    }
+
+    // zero out the marked rows
+    for (r in 0..zeroRows.size - 1)
+        if (zeroRows[r])
+            for (i in 0..matrix[r].size - 1)
+                matrix[r][i] = 0
+
+
+    // zero out the marked columns
+    for (c in 0..zeroCols.size - 1)
+        if (zeroCols[c])
+            for (r in 0..matrix.size - 1)
+                matrix[r][c] = 0
+
+    return matrix
+}
+/**
+ *  Helpers for matrix problems
+ **/
+fun List<List<Int>>.stringify(): String = this.fold(StringBuilder(), { result: StringBuilder, list: List<Int> ->
+    result.appendln(list.joinToString(" ") { if (it < 10) "0$it" else "$it" })
 }).toString()
 
-fun buildMatrix(n: Int): MutableList<MutableList<Char>> {
-    val m = MutableList(n, { MutableList(n, { '_' }) })
+fun buildMatrix(n: Int): MutableList<MutableList<Int>> {
+    val m = MutableList(n, { MutableList(n, { 0 }) })
     for (i in 0 until (n * n))
-        m[i / n][i % n] = ('a'.toInt() + i).toChar()
-
+        m[i / n][i % n] = i % 20 // add in some extra zeroes for 1.8
     return m
 }
 
 
-
+// 1.1
 val uniqueStr = "abcdefghijk"
 val nonUniqueStr = "abcdefghijka"
 println("$uniqueStr is isUnique? ${isUnique(uniqueStr)}")
 println("$nonUniqueStr is isUnique? ${isUnique(nonUniqueStr)}")
 
+// 1.2
 println("${uniqueStr.reversed()} is permutation of $uniqueStr? ${checkPermutation(uniqueStr, uniqueStr.reversed())}")
 println("${uniqueStr.reversed()+"nope"} is permutation of $uniqueStr? ${checkPermutation(uniqueStr, uniqueStr.reversed()+"nope")}")
 
+// 1.3
 val urlStr = "mr john smith    "
 println("$urlStr urlified is: ${urlify(urlStr, 13)}")
 
+// 1.4
 val palindromePerm = "taco cat#@$%@#$%"
 val notPalindromePerm = "taco cat nope"
 println("$palindromePerm is a palindromePermutation? ${palindromePermutation(palindromePerm)}")
 println("$notPalindromePerm is a palindromePermutation? ${palindromePermutation(notPalindromePerm)}")
 
+// 1.4
 val oneAwayTestStrings = arrayOf(
             "" to "", // empty
             "dog" to "dog", // exact match
@@ -243,14 +292,23 @@ val oneAwayTestStrings = arrayOf(
             "dog" to "cat")
 oneAwayTestStrings.forEach { println("${it.first} is oneAway from ${it.second}? ${oneAway(it.first, it.second)}") }
 
+// 1.6
 val compressionTestStirngs = arrayOf("", "aaaaa", "abbbbb", "aaaaab", "abcdef")
 compressionTestStirngs.forEach { println("$it compressed is ${compress(it)}") }
 
-for (i in 0..5) {
-  val m = buildMatrix(i)
-  println("------------- ORIGINAL -------------\n" +
-          m.stringify() +
-          "\nROTATED\n-------\n" +
-          rotate(m).stringify())
-
+// 1.7
+for (i in 0..4) {
+    val m = buildMatrix(i)
+    println("------------- ORIGINAL -------------\n" +
+            m.stringify() +
+            "\nROTATED\n-------\n" +
+            rotate(m).stringify())
 }
+
+// 1.8
+val matricesToZero = listOf(buildMatrix(0), buildMatrix(1), buildMatrix(7))
+for (m in matricesToZero)
+    println("------------- ORIGINAL -------------\n" +
+            m.stringify() +
+            "\nZEROED\n-------\n" +
+            zero(m).stringify())
