@@ -11,7 +11,6 @@ fun isUnique(input: String): Boolean {
         else
             charsUsed[c.toInt()] = true
     }
-
     return true
 }
 
@@ -67,6 +66,7 @@ fun urlify(input: String, trueLength: Int): String {
 
     return inputArr.joinToString("")
 }
+
 /**
  * Given a string, write a function to check if it is a permutation of a palindrome.
  * APPARENTLY WE ARE ONLY COUNTING ALPHABET CHARACTERS
@@ -158,7 +158,7 @@ fun oneAway(a: String, b: String): Boolean {
  * upper and lowercase letters only
  * */
 fun compress(input: String): String {
-    var res = StringBuilder()
+    val res = StringBuilder()
 
     var i = 0
     var n: Int
@@ -245,6 +245,7 @@ fun zero(matrix: MutableList<MutableList<Int>>): MutableList<MutableList<Int>> {
 
     return matrix
 }
+
 /**
  *  Helpers for matrix problems
  **/
@@ -259,6 +260,19 @@ fun buildMatrix(n: Int): MutableList<MutableList<Int>> {
     return m
 }
 
+/**
+ *  Assume you have a method isSubstring which checks if one word is a substring of another
+ *  Given two strings, s1 and s2,
+ *  write code to check if s2 is a rotation of s1 using only one call to isSubstring
+ *  (i e , “waterbottle” is a rotation of “erbottlewat”)
+ *  */
+fun isRotation(s1: String, s2: String) =
+        when {
+            s1.length != s2.length -> false
+            s1.length == 0 -> true
+            else -> s2 in s1 + s1
+        }
+
 
 // 1.1
 val uniqueStr = "abcdefghijk"
@@ -268,7 +282,7 @@ println("$nonUniqueStr is isUnique? ${isUnique(nonUniqueStr)}")
 
 // 1.2
 println("${uniqueStr.reversed()} is permutation of $uniqueStr? ${checkPermutation(uniqueStr, uniqueStr.reversed())}")
-println("${uniqueStr.reversed()+"nope"} is permutation of $uniqueStr? ${checkPermutation(uniqueStr, uniqueStr.reversed()+"nope")}")
+println("${uniqueStr.reversed() + "nope"} is permutation of $uniqueStr? ${checkPermutation(uniqueStr, uniqueStr.reversed() + "nope")}")
 
 // 1.3
 val urlStr = "mr john smith    "
@@ -282,14 +296,14 @@ println("$notPalindromePerm is a palindromePermutation? ${palindromePermutation(
 
 // 1.4
 val oneAwayTestStrings = arrayOf(
-            "" to "", // empty
-            "dog" to "dog", // exact match
-            "adog" to "dog", // insert/delete
-            "dog" to "dogo", // insert/delete
-            "dog" to "doggo",  // too long
-            "doggo11" to "doggo00", // same length, too many different chars
-            "dogg11" to "doggo00", // different length, too many different chars
-            "dog" to "cat")
+        "" to "", // empty
+        "dog" to "dog", // exact match
+        "adog" to "dog", // insert/delete
+        "dog" to "dogo", // insert/delete
+        "dog" to "doggo",  // too long
+        "doggo11" to "doggo00", // same length, too many different chars
+        "dogg11" to "doggo00", // different length, too many different chars
+        "dog" to "cat")
 oneAwayTestStrings.forEach { println("${it.first} is oneAway from ${it.second}? ${oneAway(it.first, it.second)}") }
 
 // 1.6
@@ -312,3 +326,14 @@ for (m in matricesToZero)
             m.stringify() +
             "\nZEROED\n-------\n" +
             zero(m).stringify())
+
+// 1.9
+val rotationTestStrings = listOf("" to "",
+        "abc" to "abc",
+        "abcd" to "dabc",
+        "dabc" to "abcd",
+        "abcdeg" to "abcdef",
+        "zbcdef" to "abcdef")
+rotationTestStrings.forEach {
+    println("${it.second} is rotation of ${it.first}? ${isRotation(it.first, it.second)}")
+}
