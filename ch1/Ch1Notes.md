@@ -1,3 +1,48 @@
+# String Search
+## Brute force search for a pattern with length `p` in a string of length `t` takes _O(p(t-p)_
+  - Take the length of the string, subtract the length of the substring `t-p`
+  - Search through the characters in the string from index `0` to `t-p` in a loop
+  - for each character, check if it and the following `p` characters match the pattern
+```kotlin
+fun containsBruteForce(target: String, pattern: String): Boolean {
+    // loop through the target string until 1 char past the target length - the pattern length
+    for (i in 0..target.length - pattern.length) {
+        // loop through the pattern and check if the corresponding char in the target matches
+        // if the whole pattern is looped through without breaking, it was all found
+        for (p in 0..pattern.length - 1) {
+            if (pattern[p] != target[i + p]) break
+            if (p == pattern.length - 1) return true
+        }
+    }
+    return false
+}
+```
+## Rabin–Karp
+1. Iterate through the characters in the target string and calculate the hash of the substring with the length of the pattern
+  - If two strings are equal they have the same hash
+2. With an efficient hash function, getting the hash for each index and checking to see if it matches the hash of the substring only takes `O(t)` time
+3. Since the hash of two substrings can match without the substrings being equal, each hashed sequence needs to be checked for true equality
+
+```kotlin
+fun isSubstringHashNaive(s: String, b: String): Boolean {
+    if (s.length == 0 || b.length == 0 || s.length > b.length) return false
+
+    val sHash = s.hash()
+
+    for (i in 0..b.length - s.length) {
+        // substring in b from i to i+s.length
+        var sub = b.substring(i, i + s.length)
+        if (sub.hash() == sHash) {
+            // hashes match, check for true equality
+            if (sub == s) return true
+        }
+    }
+
+    return false
+}
+```
+
+
 # Hash Table
 - Hash tables have an internal array of "buckets" used to store sets of key value pairs
 - A hashing function is used to match a key to a bucket at some array index
