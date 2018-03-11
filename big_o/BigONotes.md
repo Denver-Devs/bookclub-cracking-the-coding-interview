@@ -95,3 +95,12 @@ def specialCase(a):
   * an occasional run will be slow, but most runs will be much faster
   * often used with data structures where the algorithm being analysed alters the state of the structure, preventing the more expensive run from happening again soon
   * balancing a binary tree is complex with a cost of `O(n)` but only happens every `n` insertions(`1/n` insertions will result in the balance). `O(n) * 1/n = O(1)`, so the amortized complexity of insertion into a binary tree is `O(1)`
+
+
+# Log N (Quasilinear) Runtimes
+- Time goes up linearly while the number of operations performed goes up exponentially
+  * this is faster than linear `O(N)` time
+- If the number of operations to perform gets halved each iteration, the runtime will be log N
+  * common with divide and conquer algos
+  * ex: binary search in a sorted array where the number of items to be searched is halved with each pivot
+- The base of the log doesn't matter, it's just a constant and can be dropped
