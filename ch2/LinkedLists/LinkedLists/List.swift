@@ -8,6 +8,10 @@ import Foundation
 class List<T> {
     var head: Node<T>?
 
+    init(head: Node<T>?) {
+        self.head = head
+    }
+
     init?(_ values: [T]) {
         guard let first = values.first else {
             return nil
@@ -29,6 +33,7 @@ class List<T> {
         }
         return current
     }
+
     var penultimate: Node<T>? {
         var current = head
         while let next = current?.next {
@@ -70,21 +75,6 @@ class List<T> {
             current = next
             print(next.value)
         }
-    }
-
-    func reverse() {
-        var newTail: Node<T>? = nil
-        var oldTail: Node<T>? = head?.next
-        var current: Node<T>? = head
-
-        while (current != nil) {
-            current?.next = newTail
-            newTail = current
-            current = oldTail
-            oldTail = current?.next
-        }
-
-        self.head = newTail
     }
 }
 

@@ -19,11 +19,13 @@ extension List where T: Equatable {
             slow = slow?.next
         }
     }
+
     // TODO: buffer, o(n) time
     func uniq2() {
 
     }
 }
+
 /**
 * 2.2 Return kth to last
 * implement an algorithm to find the kth to last element of a singly linked list
@@ -43,9 +45,8 @@ extension List {
         }
         return current
     }
-
-
 }
+
 /**
 * 2.3 Delete middle node
 * Implement an algorithm to delete a node from a linked list given access to only that node
@@ -178,18 +179,61 @@ func sumReversed(l1: List<Int>, l2: List<Int>) -> List<Int> {
         Int(String($0))!
     })!
 }
+
 /**
 * 2.6
 * Implement a function to check if the list is a palindrome
 */
-extension List {
-    func isPalindrome() -> Bool {
-        return true
-    }
-}
-if let list = List([1,2,9]) {
-    if let list2 = List([2,4,1]) {
-        sumReversed(l1: list, l2: list2).printList()
+extension List where T: Equatable {
+    func reversed() -> List<T> {
+        var current = head
+        var newTail: Node<T>? = nil
+        var oldTail = head?.next
 
+        while (current != nil) {
+            current?.next = newTail
+            newTail = current
+            current = oldTail
+            oldTail = current?.next
+        }
+        return List(head: newTail)
+    }
+
+    func isPalindrome() -> Bool {
+        // obtain length of list
+        var length = 1
+        var current = head
+        while let next = current?.next {
+            length += 1
+            current = next
+        }
+
+        // obtain the node before the middle node in the list
+        var b4mid = head
+        for _ in 0..<(length / 2) - 1 {
+            b4mid = b4mid?.next
+        }
+        // delete the middle node if the list has an odd length
+        if (length % 2 == 1) {
+            b4mid?.next = b4mid?.next?.next
+        }
+
+        // check that the reversed second half of the list matches the first half of the list
+        var reversedTail = List(head: b4mid?.next).reversed()
+        guard var n = self.head, var r = reversedTail.head else {
+            return false
+        }
+
+        if (n.value != r.value) {
+            return false
+        }
+        while let rNext = r.next, let nNext = n.next {
+            if (nNext.value != rNext.value) {
+                return false
+            }
+            r = rNext
+            n = nNext
+        }
+        return true
     }
 }
