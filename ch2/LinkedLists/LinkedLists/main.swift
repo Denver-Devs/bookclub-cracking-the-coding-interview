@@ -1,0 +1,195 @@
+import Foundation
+
+/**
+* 2.1 Remove dups
+* write code to remove duplicates from an unsorted linked list
+* how would you do this without a temporary buffer?
+*/
+extension List where T: Equatable {
+    // no buffer, o(n^2) time
+    func uniq() {
+        var slow = head
+        while var fast = slow {
+            while let next = fast.next {
+                if (slow?.value == next.value) {
+                    fast.next = fast.next?.next
+                }
+                fast = next
+            }
+            slow = slow?.next
+        }
+    }
+    // TODO: buffer, o(n) time
+    func uniq2() {
+
+    }
+}
+/**
+* 2.2 Return kth to last
+* implement an algorithm to find the kth to last element of a singly linked list
+*/
+extension List {
+    func kFromEnd(k: Int) -> Node<T>? {
+        var length = 0
+        var current = head
+
+        while let next = current?.next {
+            length += 1
+            current = next
+        }
+        current = head
+        for _ in 0..<length - k {
+            current = current?.next
+        }
+        return current
+    }
+
+
+}
+/**
+* 2.3 Delete middle node
+* Implement an algorithm to delete a node from a linked list given access to only that node
+*/
+extension List {
+    func deleteNode(node: Node<T>) {
+        if (node.next == nil || head === node) {
+            return
+        }
+
+        // copy the value of the next node into the current node, then delete the next node
+        if let next = node.next {
+            node.value = next.value
+            node.next = next.next
+        }
+    }
+}
+
+/**
+* 2.4
+* Write code to partition a linked list around a value x
+*/
+extension List where T: Comparable {
+    func partition(x: T) {
+        var smallPart: Node<T>?, smallTail: Node<T>?, bigPart: Node<T>? = nil
+
+        var current = head
+        while let next = current?.next {
+            if ((current?.value)! > x) {
+                current?.next = bigPart
+                bigPart = current
+            } else {
+                if smallTail == nil {
+                    smallTail = current
+                }
+                current?.next = smallPart
+                smallPart = current
+            }
+            current = next
+        }
+        head = smallPart
+        smallTail?.next = bigPart
+    }
+}
+
+/**
+* 2.5
+* You have two numbers represented by a linked list, where each node
+* contains a single digit. The digits are stored in reverse order,
+* such that the 1’s digit is at the head of the list. Write a function
+* that adds the two numbers and returns the sum as a linked list.
+*
+* 1->2->9 + 2->4->1 = 921+142 = 1063
+*/
+func sum(l1: List<Int>, l2: List<Int>) -> List<Int> {
+    var n1 = l1.head
+    var n2 = l2.head
+
+    var n1Digit = l1.head?.value
+    var n2Digit = l2.head?.value
+
+    var sum = 0
+    var tens = 1
+
+    while n1Digit != nil || n2Digit != nil {
+        sum += ((n1Digit ?? 0) + (n2Digit ?? 0)) * tens
+        tens *= 10
+
+        n1Digit = n1?.next?.value
+        n2Digit = n2?.next?.value
+
+        n1 = n1?.next
+        n2 = n2?.next
+    }
+    return List<Int>(String(sum).map {
+        Int(String($0))!
+    })!
+}
+
+/**
+* 2.5
+* ok now do it again but backwards
+* 1->2->9 + 2->4->1 = 129+241 = 370
+*/
+func sumReversed(l1: List<Int>, l2: List<Int>) -> List<Int> {
+    var tens = 1
+
+    var n1 = l1.head
+    var n2 = l2.head
+
+    // iterate through the longest list to set the tens multiplier and pad the shorter list with 0 Nodes
+    while true {
+        tens *= 10
+        if n1?.next == nil && n2?.next == nil {
+            break
+        }
+        // pad the shorter list with 0s
+        if n1?.next == nil {
+            let newHead = Node(0)
+            newHead.next = l1.head
+            l1.head = newHead
+        }
+        if n2?.next == nil {
+            let newHead = Node(0)
+            newHead.next = l2.head
+            l2.head = newHead
+        }
+        n1 = n1?.next
+        n2 = n2?.next
+    }
+
+    n1 = l1.head
+    n2 = l2.head
+
+    var n1Digit = l1.head?.value
+    var n2Digit = l2.head?.value
+    var sum = 0
+
+    while n1Digit != nil || n2Digit != nil {
+        tens /= 10
+        sum += ((n1Digit ?? 0) + (n2Digit ?? 0)) * tens
+
+        n1Digit = n1?.next?.value
+        n2Digit = n2?.next?.value
+
+        n1 = n1?.next
+        n2 = n2?.next
+    }
+    return List<Int>(String(sum).map {
+        Int(String($0))!
+    })!
+}
+/**
+* 2.6
+* Implement a function to check if the list is a palindrome
+*/
+extension List {
+    func isPalindrome() -> Bool {
+        return true
+    }
+}
+if let list = List([1,2,9]) {
+    if let list2 = List([2,4,1]) {
+        sumReversed(l1: list, l2: list2).printList()
+
+    }
+}
