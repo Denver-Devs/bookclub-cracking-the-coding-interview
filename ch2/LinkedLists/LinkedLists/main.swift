@@ -237,3 +237,52 @@ extension List where T: Equatable {
         return true
     }
 }
+
+/**
+* 2.7
+* Given two singly linked lists, check if they intersect and return the intersecting node
+*/
+func intersection<T>(l1: List<T>, l2: List<T>) -> Node<T>? {
+    guard var l1current = l1.head, var l2current = l2.head else {
+        return nil
+    }
+    while let l1next = l1current.next {
+        while let l2next = l2current.next {
+            if (l2current === l1current) {
+                return l2current
+            }
+            l2current = l2next
+        }
+
+        l1current = l1next
+        l2current = l2.head!
+    }
+    return nil
+}
+
+/**
+* 2.8
+* Given a corrupt linked list find the start of the loop
+*/
+extension List {
+    func loop() -> Node<T>? {
+        guard var fast = head, var slow = head else {
+            return nil
+        }
+        while let slownext = slow.next {
+            while let fastnext = fast.next {
+                if (fast === slow) {
+                    return fast.next
+                }
+                fast = fastnext
+            }
+
+            slow = slownext
+            fast = self.head!
+        }
+        return nil
+    }
+}
+
+
+
