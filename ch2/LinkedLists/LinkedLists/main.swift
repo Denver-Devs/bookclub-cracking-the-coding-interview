@@ -5,9 +5,9 @@ import Foundation
 * write code to remove duplicates from an unsorted linked list
 * how would you do this without a temporary buffer?
 */
-extension List where T: Equatable {
+extension List where T: Equatable & Hashable {
     // no buffer, o(n^2) time
-    func uniq() {
+    func removeDuplicates() {
         var slow = head
         while var fast = slow {
             while let next = fast.next {
@@ -24,7 +24,33 @@ extension List where T: Equatable {
     func uniq2() {
 
     }
+
+    // with buffer, o(n) time
+    func removeDuplicatesBuffered() {
+        var values = Set<T>()
+        var current = self.head
+        while let next = current?.next {
+            values.insert((current?.value)!)
+            if values.contains(next.value) {
+                current?.next = next.next
+            }
+            current = current?.next
+        }
+    }
 }
+
+// "d", "e", "b", "b", "c", "d", "e","c", "d", "e", "f"
+if let list1a = List(["a", "a", "c", "a", "a", "a", "b", "b", "b", "c"]) {
+    print("List with duplicates: \(list1a.toString)")
+    list1a.removeDuplicates()
+    print("List without duplicates: \(list1a.toString)")
+}
+
+//if let list1b = List([1, 2, 3, 3, 3, 4, 4, 5, 6, 6]) {
+//    print("List with duplicates: \(list1b.toString)")
+//    list1b.removeDuplicatesBuffered()
+//    print("List without duplicates: \(list1b.toString)")
+//}
 
 /**
 * 2.2 Return kth to last
@@ -46,6 +72,7 @@ extension List {
         return current
     }
 }
+
 
 /**
 * 2.3 Delete middle node

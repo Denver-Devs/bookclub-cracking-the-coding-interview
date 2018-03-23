@@ -11,6 +11,16 @@ class List<T> {
     init(head: Node<T>?) {
         self.head = head
     }
+    var toString: String {
+        var str = ""
+        var current = head
+        str += "\(String(describing: head!.value))"
+        while let next = current?.next {
+            current = next
+            str += ", \(String(describing: next.value))"
+        }
+        return str
+    }
 
     init?(_ values: [T]) {
         guard let first = values.first else {
