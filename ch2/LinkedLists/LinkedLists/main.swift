@@ -6,51 +6,50 @@ import Foundation
 * how would you do this without a temporary buffer?
 */
 extension List where T: Equatable & Hashable {
+
     // no buffer, o(n^2) time
     func removeDuplicates() {
-        var slow = head
-        while var fast = slow {
-            while let next = fast.next {
-                if (slow?.value == next.value) {
-                    fast.next = fast.next?.next
+        var current = head
+        while current != nil {
+            var runner = current
+            while runner != nil {
+                // runner?.next is a duplicate, cut it out
+                if runner?.next?.value == current?.value {
+                    runner?.next = runner?.next?.next
+                } else {
+                    runner = runner?.next
                 }
-                fast = next
-            }
-            slow = slow?.next
-        }
-    }
-
-    // TODO: buffer, o(n) time
-    func uniq2() {
-
-    }
-
-    // with buffer, o(n) time
-    func removeDuplicatesBuffered() {
-        var values = Set<T>()
-        var current = self.head
-        while let next = current?.next {
-            values.insert((current?.value)!)
-            if values.contains(next.value) {
-                current?.next = next.next
             }
             current = current?.next
         }
     }
+
+
+    // buffer, o(n) time
+    func removeDuplicatesBuffered() {
+        var current = head
+        var values = Set<T>()
+
+        while let next = current?.next {
+            values.insert((current?.value)!)
+
+            if values.contains(next.value) {
+                current?.next = next.next
+            } else {
+                current = next
+            }
+
+        }
+    }
+
 }
 
 // "d", "e", "b", "b", "c", "d", "e","c", "d", "e", "f"
-if let list1a = List(["a", "a", "c", "a", "a", "a", "b", "b", "b", "c"]) {
+if let list1a = List([8, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 6, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 1, 1, 1, 2, 2, 5]) {
     print("List with duplicates: \(list1a.toString)")
-    list1a.removeDuplicates()
+    list1a.removeDuplicatesBuffered()
     print("List without duplicates: \(list1a.toString)")
 }
-
-//if let list1b = List([1, 2, 3, 3, 3, 4, 4, 5, 6, 6]) {
-//    print("List with duplicates: \(list1b.toString)")
-//    list1b.removeDuplicatesBuffered()
-//    print("List without duplicates: \(list1b.toString)")
-//}
 
 /**
 * 2.2 Return kth to last
