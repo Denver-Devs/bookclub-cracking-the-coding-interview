@@ -9,9 +9,9 @@ import Foundation
 * A STACK
 */
 class Stack<T> {
-    var top: Node<T>? = nil
+    private var top: Node<T>? = nil
 
-    class Node<T> {
+    private class Node<T> {
         let value: T
         var next: Node<T>? = nil
 

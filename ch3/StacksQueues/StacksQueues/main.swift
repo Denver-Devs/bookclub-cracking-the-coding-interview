@@ -7,13 +7,3 @@
 //
 
 import Foundation
-
-let stacky = Stack<Int>()
-
-for item in 0...10 {
-    stacky.push(item)
-}
-stacky.printStack()
-while stacky.isEmpty() == false {
-    try print(stacky.pop())
-}
