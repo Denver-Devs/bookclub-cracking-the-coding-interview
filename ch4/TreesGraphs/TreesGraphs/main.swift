@@ -8,27 +8,50 @@
 
 import Foundation
 
-let root = Node("beverages")
-let hot = Node("hot")
+let nums = BinarySearch.Node(10)
+nums.insert(1)
+nums.insert(4)
+nums.insert(16)
+nums.insert(5)
+nums.insert(17)
+nums.insert(2)
+nums.insert(3)
+nums.insert(12)
+nums.insert(13)
+nums.insert(14)
+nums.insert(17)
+nums.insert(2)
+nums.insert(3)
+nums.insert(12)
+nums.insert(13)
+nums.insert(17)
+// behold, the binary search tree will always print the Generic.Nodes in orderr
+print(nums)
+nums.preOrderTraverse { print($0, terminator: ", ")}
+print()
+nums.postOrderTraverse { print($0, terminator: ", ")}
+
+let root = Generic.Node("beverages")
+let hot = Generic.Node("hot")
 root.addNode(hot)
 
-let tea = Node("tea")
+let tea = Generic.Node("tea")
 hot.addNode(tea)
-tea.addNode(Node("black"))
-tea.addNode(Node("green"))
-tea.addNode(Node("chai"))
+tea.addNode(Generic.Node("black"))
+tea.addNode(Generic.Node("green"))
+tea.addNode(Generic.Node("chai"))
 
-hot.addNode(Node("coffee"))
-hot.addNode(Node("cocoa"))
+hot.addNode(Generic.Node("coffee"))
+hot.addNode(Generic.Node("cocoa"))
 
-let cold = Node("cold")
+let cold = Generic.Node("cold")
 root.addNode( cold)
-let soda = Node("soda")
+let soda = Generic.Node("soda")
 cold.addNode(soda)
-soda.addNode(Node("ginger ale"))
-soda.addNode(Node("bitter lemon"))
+soda.addNode(Generic.Node("ginger ale"))
+soda.addNode(Generic.Node("bitter lemon"))
 
-cold.addNode(Node("milk"))
+cold.addNode(Generic.Node("milk"))
 
 root.printWithDepth()
 print(root)
